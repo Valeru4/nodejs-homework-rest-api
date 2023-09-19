@@ -1,5 +1,6 @@
-import HttpError from "../helpers/HttpError.js";
+import HttpError from "../helpers/HttpErrors.js";
 import Joi from "joi";
+import Contact from "../models/Contact.js";
 
 const contactAddSchema = Joi.object({
   name: Joi.string().required(),
@@ -14,7 +15,7 @@ const contactChangeSchema = Joi.object({
 });
 
 const updateFavoriteSchema = Joi.object({
-  favorite: Joi.boolean.required(),
+  favorite: Joi.boolean().required(),
 });
 
 const GetAll = async (req, res, next) => {
