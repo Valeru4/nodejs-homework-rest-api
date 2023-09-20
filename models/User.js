@@ -34,19 +34,20 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-userSchema.post("save", handleSaveError);
-userSchema.pre("findOneAndUpdate", handleRunValidateAndUpdate);
-userSchema.post("findOneAndUpdate", handleSaveError);
-
 const signUpSchema = Joi.object({
   username: Joi.string().required(),
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
 });
+
 const signInSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
 });
+
+userSchema.post("save", handleSaveError);
+userSchema.pre("findOneAndUpdate", handleRunValidateAndUpdate);
+userSchema.post("findOneAndUpdate", handleSaveError);
 
 const userSchemas = {
   signUpSchema,

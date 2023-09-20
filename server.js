@@ -8,6 +8,21 @@ mongoose
   .connect(DB_HOST)
   .then(() => {
     app.listen(PORT, () => {
+      const listRoutes = () => {
+        const routes = [];
+        app._router.stack.forEach((middleware) => {
+          if (middleware.route) {
+            routes.push(
+              `${Object.keys(middleware.route.methods)} - ${
+                middleware.route.path
+              }`
+            );
+          }
+        });
+        console.log(routes);
+        return routes;
+      };
+      listRoutes();
       console.log("Database connection successful");
     });
   })
