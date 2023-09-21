@@ -49,7 +49,7 @@ userSchema.post("save", handleSaveError);
 userSchema.pre("findOneAndUpdate", handleRunValidateAndUpdate);
 userSchema.post("findOneAndUpdate", handleSaveError);
 
-const userSchemas = {
+export const userSchemas = {
   signUpSchema,
   signInSchema,
 };

@@ -23,7 +23,22 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).json({ message: err.message });
+  res.status(500).json({
+    message: err.message,
+  });
 });
 
+const listRoutes = () => {
+  const routes = [];
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      routes.push(
+        `${Object.keys(middleware.route.methods)} - ${middleware.route.path}`
+      );
+    }
+  });
+  console.log(routes);
+  return routes;
+};
+listRoutes();
 export default app;

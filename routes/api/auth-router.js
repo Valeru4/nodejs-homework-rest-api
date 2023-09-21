@@ -1,13 +1,15 @@
 import express from "express";
 
-import * as userSchema from "../../models/User.js";
+import { userSchemas } from "../../models/User.js";
 
 import validateBody from "../../middleware/validateBody.js";
 import AuthControllers from "../../controllers/auth-controllers.js";
 
 const authRouter = express.Router();
 
-const userSignupValidate = validateBody(userSchema.SignupSchema);
+console.log(userSchemas.signUpSchemas);
+
+const userSignupValidate = validateBody(userSchemas.signUpSchema);
 
 console.log(userSignupValidate);
 
