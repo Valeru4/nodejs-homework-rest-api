@@ -1,7 +1,8 @@
 import express from "express";
-import Controllers from "../../controllers/Controllers.js";
-const contactsRouter = express.Router();
+import Controllers from "../../controllers/contacts-controllers.js";
 import isValidId from "../../middleware/isValidId.js";
+
+const contactsRouter = express.Router();
 
 contactsRouter.get("/", Controllers.GetAll);
 
