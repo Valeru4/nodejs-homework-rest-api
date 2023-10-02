@@ -1,22 +1,29 @@
 import express from "express";
 import Controllers from "../../controllers/contacts-controllers.js";
-import isValidId from "../../middleware/isValidId.js";
+import isValidid from "../../middleware/isValidId.js";
+import authenticate from "../../middleware/authenticate.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", Controllers.GetAll);
+contactsRouter.get("/", authenticate, Controllers.GetAll);
 
-contactsRouter.get("/:id", isValidId, Controllers.GetById);
+contactsRouter.get("/:id", authenticate, isValidid, Controllers.GetById);
 
-contactsRouter.post("/", Controllers.AddContact);
+contactsRouter.post("/", authenticate, Controllers.AddContact);
 
-contactsRouter.delete("/:contactId", Controllers.RemoveContact);
+contactsRouter.delete("/:contactId", authenticate, Controllers.RemoveContact);
 
-contactsRouter.put("/:contactId", isValidId, Controllers.UpdateById);
+contactsRouter.put(
+  "/:contactId",
+  authenticate,
+  isValidid,
+  Controllers.UpdateById
+);
 
 contactsRouter.patch(
   "/:contactId/favorite",
-  isValidId,
+  authenticate,
+  isValidid,
   Controllers.UpdateFavoriteById
 );
 

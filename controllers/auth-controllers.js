@@ -1,9 +1,15 @@
 import User from "../models/User.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import path from "path";
+import fs from "fs/promises";
+import gravatar from "gravatar";
+import jimp from "jimp";
 
 const { JWT_SECRET } = process.env;
 import HttpError from "../helpers/HttpErrors.js";
+
+const postersPath = path.resolve("public", "avatars");
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -13,7 +19,13 @@ const signup = async (req, res) => {
   }
 
   const hashPassword = await bcryptjs.hash(password, 10);
-  const newUser = await User.create({ ...req.body, password: hashPassword });
+  const avatarURL = gravatar.url(email);
+
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  });
 
   res.status(201).json({
     user: {
@@ -68,9 +80,28 @@ const signout = async (req, res) => {
   });
 };
 
+const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+  const { path: oldPath, filename } = req.file;
+
+  const image = await jimp.read(oldPath);
+  await image.resize(200, 200);
+  await image.writeAsync(oldPath);
+  const newPath = path.join(postersPath, filename);
+  await fs.rename(oldPath, newPath);
+
+  const avatarURL = path.join("avatars", filename);
+  await User.findByIdAndUpdate(_id, { avatarURL });
+
+  if (!avatarURL) throw HttpError(404, "Not found");
+
+  res.json({ avatarURL });
+};
+
 export default {
   signup,
   signin,
   getCurrent,
   signout,
+  updateAvatar,
 };
