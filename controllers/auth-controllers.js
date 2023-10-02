@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import path from "path";
 import fs from "fs/promises";
 import gravatar from "gravatar";
+import jimp from "jimp";
 
 const { JWT_SECRET } = process.env;
 import HttpError from "../helpers/HttpErrors.js";
@@ -82,8 +83,13 @@ const signout = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: oldPath, filename } = req.file;
+
+  const image = await jimp.read(oldPath);
+  await image.resize(200, 200);
+  await image.writeAsync(oldPath);
   const newPath = path.join(postersPath, filename);
   await fs.rename(oldPath, newPath);
+
   const avatarURL = path.join("avatars", filename);
   await User.findByIdAndUpdate(_id, { avatarURL });
 
