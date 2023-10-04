@@ -27,6 +27,14 @@ const userSchema = new Schema(
       type: String,
       default: null,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
@@ -46,6 +54,9 @@ const signInSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const userEmailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+});
 userSchema.post("save", handleSaveError);
 userSchema.pre("findOneAndUpdate", handleRunValidateAndUpdate);
 userSchema.post("findOneAndUpdate", handleSaveError);
